@@ -1,0 +1,54 @@
+name: brevly-server
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    container_name: server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /usr/src/app
+    ports:
+      - 3333:3333
+    env_file:
+      - .env
+    environment:
+      CI: "true"
+      DB_URL: "postgresql://postgres:postgres@postgres:5432/brevly"
+    command: sh -c "pnpm install --frozen-lockfile --store-dir /pnpm/store --config.confirmModulesPurge=false && pnpm run db:migrate && pnpm run dev"
+    volumes:
+      - .:/usr/src/app
+      - app-node-modules:/usr/src/app/node_modules
+      - pnpm-store:/pnpm/store
+    networks:
+      - brevly
+
+  postgres:
+    container_name: postgres
+    image: postgres:18.3
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "brevly"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - pg-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d brevly"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - brevly
+
+volumes:
+  app-node-modules: {}
+  pg-data: {}
+  pnpm-store: {}
+
+networks:
+  brevly:
+    driver: bridge
