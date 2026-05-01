@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-8257E5">
-</p>
-
-<p align="center">
   <a href="#-about">About</a> •
   <a href="#-layout">Layout</a> •
   <a href="#-technologies">Technologies</a> •
@@ -18,7 +14,6 @@
 </p>
 
 ## ✨ About
- d
 Brev.ly is a simple URL shortener. It lets users create custom short links, access the original URL through them, track the number of visits, delete links, and export the registered links as a CSV file.
 
 ## 🔖 Layout
